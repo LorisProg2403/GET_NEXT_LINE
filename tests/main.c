@@ -28,4 +28,4 @@ int	main(void)
 		free(line);
 	}
 	return (0);
-}i
+}
