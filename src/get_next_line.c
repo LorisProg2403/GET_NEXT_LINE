@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgaume <lgaume@student.42lausanne.ch>      +#+  +:+       +#+        */
+/*   By: lgaume <lgaume@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/29 03:48:00 by lgaume            #+#    #+#             */
-/*   Updated: 2023/10/29 03:48:01 by lgaume           ###   ########.fr       */
+/*   Created: 2023/11/01 03:37:13 by lgaume            #+#    #+#             */
+/*   Updated: 2023/11/01 04:38:46 by lgaume           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*get_next_line(int fd)
 	clean_stash(&stash);
 	if (!line[0])
 	{
-		free_stash(stash);
+		free(stash);
 		stash = NULL;
 		free(line);
 		return (NULL);
@@ -34,7 +34,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-/* Uses read() to add characteres to the stash */
+/* Utilise read() pour ajouter des charachteres a la stash */
 
 void	read_and_stash(int fd, t_list **stash)
 {
@@ -47,8 +47,8 @@ void	read_and_stash(int fd, t_list **stash)
 		buff = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		if (!buff)
 			return ;
-		readed = (int)read(fd, buff, BUFFER_SIZE);
-		if ((!*stash && !readed) || readed == -1)
+		readed = read(fd, buff, BUFFER_SIZE);
+		if ((!(*stash) && !readed) || readed == -1)
 		{
 			free(buff);
 			return ;
@@ -59,13 +59,13 @@ void	read_and_stash(int fd, t_list **stash)
 	}
 }
 
-/* Adds the content of the buffer to the end of the stash */
+/* Ajoute le contenu du buffer a la stash */
 
 void	add_to_stash(t_list **stash, char *buff, int readed)
 {
 	int		i;
-	t_list	*last;
 	t_list	*new;
+	t_list	*last;
 
 	new = malloc(sizeof(t_list));
 	if (!new)
@@ -81,17 +81,17 @@ void	add_to_stash(t_list **stash, char *buff, int readed)
 		i++;
 	}
 	new->content[i] = '\0';
-	if (!*stash)
+	if (!(*stash))
 		*stash = new;
 	else
 	{
-		last = ft_lst_get_last(*stash);
+		last = lst_get_last(*stash);
 		last->next = new;
 	}
 }
 
-/* Extracts all characters from our stash and stores them in out line.
- * stopping after the first \n it encounters */
+/* Extrait tous les characteres de la stash and les stockent dans la
+ * ligne en s'arretant a la premiere occurence de \n. */
 
 void	extract_line(t_list *stash, char **line)
 {
@@ -111,7 +111,7 @@ void	extract_line(t_list *stash, char **line)
 		{
 			if (stash->content[i] == '\n')
 			{
-				(*line)[j++] = stash->content[i];
+				(*line)[j++] = '\n';
 				break ;
 			}
 			(*line)[j++] = stash->content[i++];
@@ -121,13 +121,13 @@ void	extract_line(t_list *stash, char **line)
 	(*line)[j] = '\0';
 }
 
-/* This function clears the stash so only the characters that have not
- * been returned at the end of get_next_line() remain in the STATIC stash */
+/* Nettoie la stash pour que seuls les characteres qui n'ont pas
+ * ete retournes reste dans la STATIC stash */
 
 void	clean_stash(t_list **stash)
 {
-	t_list	*last;
 	t_list	*clean;
+	t_list	*last;
 	int		i;
 	int		j;
 
@@ -135,13 +135,13 @@ void	clean_stash(t_list **stash)
 	if (!clean)
 		return ;
 	clean->next = NULL;
-	last = ft_lst_get_last(*stash);
+	last = lst_get_last(*stash);
 	i = 0;
 	while (last->content[i] && last->content[i] != '\n')
 		i++;
 	if (last->content && last->content[i] == '\n')
 		i++;
-	clean->content = malloc(sizeof(char) * (ft_strlen(last->content) - i + 1));
+	clean->content = malloc(sizeof(char) * (ft_strlen(last->content) - 1 + 1));
 	if (!clean->content)
 		return ;
 	j = 0;
