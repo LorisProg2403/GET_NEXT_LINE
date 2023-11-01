@@ -1,5 +1,0 @@
-L'histoire de la programmation en C est une saga fascinante qui remonte aux années 1970
-Le C a été développé par Dennis Ritchie au sein des laboratoires Bell de AT&T, en partie pour créer un système d'exploitation plus efficace appelé UNIX.
-Cette nouvelle langue de programmation a été conçue pour offrir un équilibre entre la puissance et la portabilité.
-Le C a rapidement gagné en popularité en raison de sa simplicité, de sa flexibilité et de ses performances.
-Il a été utilisé pour développer des systèmes d'exploitation, des compilateurs, des applications système et bien plus encore.
